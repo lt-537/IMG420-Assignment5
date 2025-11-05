@@ -1,0 +1,59 @@
+[gd_scene load_steps=10 format=3 uid="uid://l217n8h6cxud"]
+
+[ext_resource type="Shader" uid="uid://nxr4leeccx18" path="res://custom_particle.gdshader" id="1_1bvp3"]
+[ext_resource type="Script" uid="uid://mc6rba002wwe" path="res://ParticleController.cs" id="2_lquwl"]
+[ext_resource type="Script" uid="uid://cn514ywob5nbx" path="res://Player.cs" id="3_7mycd"]
+[ext_resource type="Script" uid="uid://njrsiygrb03b" path="res://PhysicsChain.cs" id="3_272bh"]
+[ext_resource type="Script" uid="uid://dfdcvr3iruyqb" path="res://LaserDetect.cs" id="4_5vw27"]
+[ext_resource type="Texture2D" uid="uid://dpmksvhfjhynv" path="res://icon.svg" id="4_272bh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bo1nx"]
+size = Vector2(122, 124)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5vw27"]
+shader = ExtResource("1_1bvp3")
+shader_parameter/wave_intensity = 0.1
+shader_parameter/color_start = Color(1, 0.5, 0, 1)
+shader_parameter/color_end = Color(1, 0, 0.5, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_kek77"]
+particle_flag_disable_z = true
+initial_velocity_min = 15.0
+initial_velocity_max = 35.0
+angular_velocity_min = -1.50002
+angular_velocity_max = 1.49998
+gravity = Vector3(0, -15, 0)
+scale_min = 0.6
+scale_max = 1.1
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
+script = ExtResource("3_7mycd")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture = ExtResource("4_272bh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(1, -1)
+shape = SubResource("RectangleShape2D_bo1nx")
+
+[node name="ParticleSystem" type="Node2D" parent="."]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="ParticleSystem"]
+material = SubResource("ShaderMaterial_5vw27")
+position = Vector2(514, 103)
+amount = 300
+lifetime = 3.0
+process_material = SubResource("ParticleProcessMaterial_kek77")
+script = ExtResource("2_lquwl")
+
+[node name="PhysicsDemo" type="Node2D" parent="."]
+
+[node name="PhysicsChain" type="Node2D" parent="PhysicsDemo"]
+script = ExtResource("3_272bh")
+
+[node name="LaserSystem" type="Node2D" parent="."]
+position = Vector2(222.2, 263)
+script = ExtResource("4_5vw27")
+PlayerPath = NodePath("../Player")
